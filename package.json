@@ -1,0 +1,30 @@
+{
+  "name": "lending-club",
+  "version": "1.0.0",
+  "main": "index.js",
+  "author": "HOVOH",
+  "license": "MIT",
+  "private": true,
+  "scripts": {
+    "w:hardon": "yarn workspace @lenclub/hardon",
+    "w:contracts": "yarn workspace @lenclub/lending-contracts",
+    "w:api": "yarn workspace @lenclub/api",
+    "build": "yarn w:hardon build",
+    "backend:start": "yarn w:contracts clean && yarn w:contracts hh:node",
+    "api:build": "yarn w:contracts deploy:export && yarn w:api build",
+    "syncpack:fix": "yarn syncpack fix-mismatches && yarn install",
+    "syncpack:list": "yarn syncpack list-mismatches"
+  },
+  "workspaces": {
+    "packages": [
+      "packages/*"
+    ],
+    "nohoist": [
+      "**/@types/mocha",
+      "**/@types/jest"
+    ]
+  },
+  "dependencies": {
+    "syncpack": "^8.4.11"
+  }
+}
