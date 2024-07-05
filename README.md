@@ -1,5 +1,5 @@
 
-# Lending Club Repo
+# Lending Crypto Repo
 
 Monorepo for all the code regarding the MCLB lending platform.
 
@@ -47,7 +47,7 @@ NestJs app to monitor data and run the liquidation
 
 React app using Chakra UI
 
-### api (@mclb/lending-api)
+### api (@your name/lending-api)
 
 Api to bundle contract typings with addresses automatically
 
