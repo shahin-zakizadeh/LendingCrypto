@@ -1,0 +1,71 @@
+{
+  "name": "@mclb/lending-api",
+  "version": "0.1.0-rc.6",
+  "license": "MIT",
+  "author": "HOVOH <mclb@hovoh.me>",
+  "main": "dist/index.js",
+  "module": "dist/lending-api.esm.js",
+  "typings": "dist/index.d.ts",
+  "files": [
+    "dist",
+    "generated",
+    "src"
+  ],
+  "scripts": {
+    "analyze": "size-limit --why",
+    "generate:lending": "typechain --target ../../node_modules/@hovoh/typechain-ethers-multicall --out-dir ./src/types '../lending-contracts/generated/abis/contracts/**/*.json'",
+    "generate:oz": "typechain --target ../../node_modules/@hovoh/typechain-ethers-multicall --out-dir ./src/types/openzeppelin '../lending-contracts/generated/abis/@openzeppelin/**/*.json'",
+    "generate:typings": "yarn generate:lending && yarn generate:oz",
+    "build": "yarn generate:typings && dts build",
+    "lint": "dts lint",
+    "prepare": "dts build",
+    "size": "size-limit",
+    "start": "dts watch",
+    "test": "dts test"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "dts lint"
+    }
+  },
+  "prettier": {
+    "printWidth": 80,
+    "semi": true,
+    "singleQuote": true,
+    "trailingComma": "es5"
+  },
+  "jest": {
+    "testEnvironment": "node"
+  },
+  "engines": {
+    "node": ">=12"
+  },
+  "size-limit": [
+    {
+      "path": "dist/api.cjs.production.min.js",
+      "limit": "10 KB"
+    },
+    {
+      "path": "dist/api.esm.js",
+      "limit": "10 KB"
+    }
+  ],
+  "devDependencies": {
+    "@hovoh/typechain-ethers-multicall": "^10.1.3",
+    "@size-limit/preset-small-lib": "^8.1.2",
+    "@tsconfig/recommended": "^1.0.2",
+    "@types/jest": "^27.5.0",
+    "dts-cli": "^1.6.3",
+    "husky": "^8.0.3",
+    "size-limit": "^8.1.2",
+    "ts-jest": "27.0.0",
+    "tslib": "^2.4.1",
+    "typechain": "^8.1.1",
+    "typescript": "^4.9.4"
+  },
+  "dependencies": {
+    "@hovoh/ethcall": "^9.9.12",
+    "@hovoh/evmcontractsregistry": "^0.3.9",
+    "ethers": "^5.7.2"
+  }
+}

@@ -1,0 +1,41 @@
+create dbml schema -> convert to sql -> create typeorm entities -> create migration up files using typeorm cli
+This is for database creation
+
+
+
+-------
+Blockchain layer: is responsible for interacting with blockchain, to be precise:
+-------
+
+
+-------
+main layer (business layer): is responsible for keeping track of accounts information off-chain and raise alert for when we need to liquidate someone
+-------
+
+
+The structure of main layer:
+
+Mai Module:
+Generates test data for DB and feeds them into Lending Moduel
+
+Lending Module:
+Keeps track of the user account's information, it stores pointers to Assets owned by each user
+
+Asset Module:
+Keeps track of the assets information, including their price
+
+
+To liquidate, the lending module queries asset data and price from Asset Module. Upon receiving them, it caclculates the collateral percentage and compares it to the standard set in before, If the collateral percentage is below standard, it returns necessary information to liquidate the user.
+
+
+
+grafana |
+
+
+Q: Who and what is responsible for gathering each new user information and insert them into blockchain?
+
+Q: How the relationship between Blockchain layer and main layer is handled?
+
+Q: How the relationship between main layer and the owner is handled? What interface do they use for it?
+
+Q: Basically the owner only needs to contact Lending Module to query, nothing more nothing less, is that correct?

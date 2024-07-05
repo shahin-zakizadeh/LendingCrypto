@@ -1,0 +1,8 @@
+#!/bin/sh
+
+PGPASSWORD=$DB_PASSWORD psql -U $DB_USER -h $DB_HOST -p $DB_PORT -d "postgres" -c "DROP DATABASE IF EXISTS $DB_NAME"
+PGPASSWORD=$DB_PASSWORD psql -U $DB_USER -h $DB_HOST -p $DB_PORT -d "postgres" -c "CREATE DATABASE $DB_NAME;"
+PGPASSWORD=$DB_PASSWORD psql -U $DB_USER -h $DB_HOST -p $DB_PORT -d $DB_NAME -c "CREATE EXTENSION IF NOT EXISTS timescaledb"
+PGPASSWORD=$DB_PASSWORD psql -U $DB_USER -h $DB_HOST -p $DB_PORT -d $DB_NAME -c "SELECT timescaledb_pre_restore()"
+PGPASSWORD=$DB_PASSWORD pg_restore -Fc -U $DB_USER -h $DB_HOST -p $DB_PORT -d $DB_NAME $BACKUP_FOLDER/$1
+PGPASSWORD=$DB_PASSWORD psql -U $DB_USER -h $DB_HOST -p $DB_PORT -d $DB_NAME -c "SELECT timescaledb_post_restore()"

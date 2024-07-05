@@ -1,0 +1,343 @@
+{
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": {
+          "type": "grafana",
+          "uid": "-- Grafana --"
+        },
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "target": {
+          "limit": 100,
+          "matchAny": false,
+          "tags": [],
+          "type": "dashboard"
+        },
+        "type": "dashboard"
+      }
+    ]
+  },
+  "editable": true,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 0,
+  "links": [],
+  "liveNow": false,
+  "panels": [
+    {
+      "datasource": {
+        "type": "postgres",
+        "uid": "PCD6EC19238167EF9"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 24,
+        "x": 0,
+        "y": 0
+      },
+      "id": 8,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "postgres",
+            "uid": "PCD6EC19238167EF9"
+          },
+          "editorMode": "code",
+          "format": "time_series",
+          "group": [],
+          "metricColumn": "none",
+          "rawQuery": true,
+          "rawSql": "SELECT\n  at AS \"time\",\n  \"usdValue\", average(tw_value) as twap, average(tw_value) + stddev(agg) as bb_up, average(tw_value) - stddev(agg) as bb_down\nFROM (select  \t\t\"priceSourceId\",  \t\tat,  \t\t\"usdValue\",  \t\tstats_agg(\"usdValue\") OVER timespan as agg, \t\ttime_weight('Linear', at, \"usdValue\") over timespan as tw_value \tfrom price_entry \twindow timespan as (partition by \"priceSourceId\" order by at range '24 hours' preceding) \t) tw\nWHERE\n  \"priceSourceId\" = ${PriceSource}\nORDER BY 1",
+          "refId": "A",
+          "select": [
+            [
+              {
+                "params": [
+                  "usd_value, average(tw_value) as twap, average(tw_value) + stddev(agg) as bb_up, average(tw_value) - stddev(agg) as bb_down"
+                ],
+                "type": "column"
+              }
+            ]
+          ],
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          },
+          "table": "(select  \t\tprice_source_id,  \t\tat,  \t\tusd_value,  \t\tstats_agg(usd_value) OVER timespan as agg, \t\ttime_weight('Linear', at, usd_value) over timespan as tw_value \tfrom price_entries \twindow timespan as (partition by price_source_id order by at range '24 hours' preceding) \t) tw",
+          "timeColumn": "at",
+          "where": [
+            {
+              "name": "",
+              "params": [
+                "price_source_id",
+                "=",
+                "${PriceSource}"
+              ],
+              "type": "expression"
+            }
+          ]
+        }
+      ],
+      "title": "${PriceSource} - 24H MA with BB",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "postgres",
+        "uid": "PCD6EC19238167EF9"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 24,
+        "x": 0,
+        "y": 8
+      },
+      "id": 6,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "postgres",
+            "uid": "PCD6EC19238167EF9"
+          },
+          "editorMode": "code",
+          "format": "time_series",
+          "group": [],
+          "metricColumn": "none",
+          "rawQuery": true,
+          "rawSql": "SELECT\n  at AS \"time\",\n  \"usdValue\", \n  average(avg_value) as avg\nFROM (\n\tselect  \t\t\n\t\t\"priceSourceId\",  \t\t\n\t\tat,  \t\t\n\t\t\"usdValue\",  \t\t\n\t\ttime_weight('Linear', at, \"usdValue\")  \t\t\t\n\tOVER(partition by \"priceSourceId\" order by at range '1 hour' preceding) as avg_value  \t\n\tfrom price_entry) tw\nWHERE\n  \"priceSourceId\" = '$PriceSource'\nORDER BY 1",
+          "refId": "A",
+          "select": [
+            [
+              {
+                "params": [
+                  "usd_value, average(avg_value) as avg"
+                ],
+                "type": "column"
+              }
+            ]
+          ],
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          },
+          "table": "(select  \t\tprice_source_id,  \t\tat,  \t\tusd_value,  \t\ttime_weight('Linear', at, usd_value)  \t\t\tOVER(partition by price_source_id order by at range '1 hour' preceding) as avg_value  \tfrom price_entries) tw",
+          "timeColumn": "at",
+          "timeColumnType": "timestamp",
+          "where": [
+            {
+              "name": "",
+              "params": [
+                "price_source_id",
+                "=",
+                "'$PriceSource'"
+              ],
+              "type": "expression"
+            }
+          ]
+        }
+      ],
+      "title": "1h price average",
+      "type": "timeseries"
+    }
+  ],
+  "refresh": "",
+  "revision": 1,
+  "schemaVersion": 38,
+  "style": "dark",
+  "tags": [],
+  "templating": {
+    "list": [
+      {
+        "current": {
+          "selected": false,
+          "text": "WFTM/USD-cl_polling",
+          "value": "13"
+        },
+        "datasource": {
+          "type": "postgres",
+          "uid": "PCD6EC19238167EF9"
+        },
+        "definition": "SELECT label || '-' || type || '---' || id as vars FROM price_source;",
+        "hide": 0,
+        "includeAll": false,
+        "label": "",
+        "multi": false,
+        "name": "PriceSource",
+        "options": [],
+        "query": "SELECT label || '-' || type || '---' || id as vars FROM price_source;",
+        "refresh": 1,
+        "regex": "(?<text>.*?)---(?<value>\\d*)",
+        "skipUrlSync": false,
+        "sort": 0,
+        "type": "query"
+      }
+    ]
+  },
+  "time": {
+    "from": "now-24h",
+    "to": "now"
+  },
+  "timepicker": {},
+  "timezone": "",
+  "title": "PriceSources",
+  "uid": "sM_u0mGVk",
+  "version": 1,
+  "weekStart": ""
+}

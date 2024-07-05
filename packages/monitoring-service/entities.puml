@@ -1,0 +1,116 @@
+@startuml
+
+!define table(ename, dbname) entity "<b>ename</b>"
+
+!define pkey(x) {field} <b><color:DarkGoldenRod><&key></color> x</b>
+!define fkey(x) {field} <color:#AAAAAA><&key></color> x
+!define column(x) {field} <color:#EFEFEF><&media-record></color> x
+
+hide stereotypes
+hide methods
+hide circle
+
+left to right direction
+
+skinparam roundcorner 5
+skinparam linetype ortho
+skinparam shadowing false
+skinparam handwritten false
+
+skinparam class {
+    BackgroundColor white
+    ArrowColor seagreen
+    BorderColor seagreen
+}
+
+
+table( VolumeEntry, volume_entry ) as volume_entry {
+  pkey( id ): INTEGER 
+  column( timeStamp ): TIMESTAMP WITHOUT TIME ZONE(6) 
+  column( timeFrame ): INTEGER 
+  column( volume ): DOUBLE PRECISION 
+  column( source ): CHARACTER VARYING 
+  column( assetId ): INTEGER 
+}
+
+table( MarketCapEntry, market_cap_entry ) as market_cap_entry {
+  pkey( id ): INTEGER 
+  column( timeStamp ): TIMESTAMP WITHOUT TIME ZONE(6) 
+  column( marketCap ): DOUBLE PRECISION 
+  column( source ): CHARACTER VARYING 
+  column( assetId ): INTEGER 
+}
+
+table( PriceEntry, price_entry ) as price_entry {
+  pkey( at ): TIMESTAMP WITHOUT TIME ZONE(6) 
+  column( usdValue ): NUMERIC(78, 18) 
+  column( value ): NUMERIC(78, 18) 
+  pkey( priceSourceId ): INTEGER 
+}
+
+table( PriceSource, price_source ) as price_source {
+  pkey( id ): INTEGER 
+  column( address ): CHARACTER VARYING(42) 
+  column( chainId ): INTEGER 
+  column( decimals ): INTEGER 
+  fkey( denominatorId ): INTEGER <<FK>>
+  column( priority ): INTEGER 
+  column( enabled ): BOOLEAN 
+  column( label ): CHARACTER VARYING 
+  column( type ): CHARACTER VARYING 
+  fkey( assetId ): INTEGER <<FK>>
+}
+
+table( Asset, asset ) as asset {
+  pkey( id ): INTEGER 
+  column( address ): CHARACTER VARYING(42) 
+  column( chainId ): INTEGER 
+  column( decimals ): SMALLINT 
+  column( symbol ): CHARACTER VARYING 
+  column( name ): CHARACTER VARYING 
+  column( type ): CHARACTER VARYING(20) 
+}
+
+table( SlippageEntry, slippage_entry ) as slippage_entry {
+  pkey( timestamp ): TIMESTAMP WITHOUT TIME ZONE(6) 
+  pkey( fromAssetId ): INTEGER 
+  pkey( toAssetId ): INTEGER 
+  pkey( tradeSize ): REAL 
+  column( slippage ): REAL 
+}
+
+table( Account, account ) as account {
+  pkey( id ): INTEGER 
+  column( nftId ): INTEGER 
+  fkey( marketId ): INTEGER <<FK>>
+  column( owner ): CHARACTER VARYING(42) 
+  column( collateralAmount ): NUMERIC(78, 18) 
+  column( principalAmount ): NUMERIC(78, 18) 
+  column( interestIndex ): NUMERIC(78, 18) 
+}
+
+table( Market, market ) as market {
+  pkey( id ): INTEGER 
+  column( address ): CHARACTER VARYING(42) 
+  column( chainId ): INTEGER 
+  column( closingFee ): NUMERIC(78, 18) 
+  column( liquidationThreshold ): NUMERIC(78, 18) 
+  column( liquidationMaxHR ): NUMERIC(78, 18) 
+  column( liquidationPenalty ): NUMERIC(78, 3) 
+  column( interestIndex ): NUMERIC(78, 18) 
+  column( smallAccountThreshold ): NUMERIC(78) 
+  fkey( collateralAssetId ): INTEGER <<FK>>
+  fkey( principalAssetId ): INTEGER <<FK>>
+  column( lastSync ): INTEGER 
+}
+
+"price_source" ||--|{ "price_entry"
+"asset" ||--o{ "price_source"
+"asset" ||--|{ "price_source"
+"asset" ||--|{ "slippage_entry"
+"asset" ||--|{ "slippage_entry"
+"market" ||--|{ "account"
+"asset" ||--|{ "market"
+"asset" ||--|{ "market"
+
+@enduml

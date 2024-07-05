@@ -1,0 +1,53 @@
+{
+  "name": "@lenclub/lending-contracts",
+  "version": "1.0.0",
+  "main": "index.js",
+  "author": "HOVOH",
+  "license": "MIT",
+  "scripts": {
+    "compile": "npx hardhat compile",
+    "uml": "sol2uml class ./contracts",
+    "test": "npx hardhat test",
+    "check-coverage": "npx hardhat coverage",
+    "setup": "yarn workspace @lenclub/hardon build && yarn generate",
+    "generate": "npx hardhat generate && npx hardhat secret",
+    "secret": "npx hardhat secret",
+    "clean": "npx hardhat clean",
+    "hh:node": "npx hardhat node --tags hh_setup --export-all ../api/generated/deployments.json",
+    "hh:node:ftm": "npx hardhat node --tags fantom_fork --fork https://rpc.ankr.com/fantom --fork-block-number 60407021 --chain-id 250 --export-all ../api/generated/deployments.json",
+    "hh:redeploy": "npx hardhat deploy --tags hh_setup --export-all ../api/generated/deployments.json",
+    "deploy": "cross-env NODE_ENV=prod npx hardhat deploy",
+    "deploy:test": "yarn deploy --tags hh_setup",
+    "deploy:export": "npx hardhat export --export-all ../api/generated/deployments.json",
+    "flat:simplemarket": "npx hardhat flatten ./contracts/markets/SimpleInterestMarket.sol > ./flat/SimpleInterestMarket.sol"
+  },
+  "devDependencies": {
+    "@0x/contracts-zero-ex": "^0.39.1",
+    "@aave/core-v3": "^1.17.2",
+    "@chainlink/contracts": "^0.5.1",
+    "@defi-wonderland/smock": "^2.3.4",
+    "@lenclub/hardon": "0.0.1",
+    "@nomicfoundation/hardhat-chai-matchers": "^1.0.5",
+    "@nomicfoundation/hardhat-network-helpers": "1.0.0",
+    "@nomicfoundation/hardhat-toolbox": "2.0.0",
+    "@nomiclabs/hardhat-etherscan": "3.0.0",
+    "@openzeppelin/contracts": "^4.8.1",
+    "@prb/math": "^3.0.0",
+    "@typechain/ethers-v5": "10.1.0",
+    "@typechain/hardhat": "6.1.2",
+    "@types/mocha": "^10.0.1",
+    "@uniswap/v2-core": "^1.0.1",
+    "cross-env": "^7.0.3",
+    "dotenv": "^16.0.3",
+    "hardhat": "2.12.3",
+    "hardhat-abi-exporter": "^2.10.1",
+    "hardhat-deploy": "^0.11.22",
+    "hardhat-gas-reporter": "1.0.8",
+    "sol2uml": "^2.2.6",
+    "solidity-coverage": "0.8.1",
+    "typechain": "^8.1.1"
+  },
+  "dependencies": {
+    "@aave/core-v3": "^1.17.2"
+  }
+}

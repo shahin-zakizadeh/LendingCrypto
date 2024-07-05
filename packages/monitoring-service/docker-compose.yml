@@ -1,0 +1,50 @@
+version: "3.9"
+services:
+  adminer:
+    image: adminer
+    restart: ${RESTART_POLICY}
+    ports:
+      - "${ADMINER_PORT}:8080"
+  db:
+    image: timescale/timescaledb-ha:pg14-latest
+    restart: ${RESTART_POLICY}
+    ports:
+      - "${DB_PORT}:5432"
+    environment:
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_DB: ${DB_NAME}
+    volumes:
+      - monitored-data:/home/postgres/pgdata/data
+  grafana:
+    build:
+      context: ./grafana
+    restart: ${RESTART_POLICY}
+    environment:
+      MONITOR_URL: "db:5432"
+      MONITOR_DB_USER: ${DB_USER}
+      MONITOR_DB_NAME: ${DB_NAME}
+      MONITOR_DB_PASSWORD: ${DB_PASSWORD}
+    ports:
+      - "${GRAF_PORT}:3000"
+    volumes:
+      - grafana-data:/var/lib/grafana
+      - ./grafana/dashboards:/var/lib/grafana/dashboards
+  db_client:
+    build:
+      context: ./
+      dockerfile: ./pgsql-client.Dockerfile
+    environment:
+      DB_HOST: "db"
+      DB_PORT: "5432"
+      DB_USER: ${DB_USER}
+      DB_PASSWORD: ${DB_PASSWORD}
+      DB_NAME: ${DB_NAME}
+      BACKUP_FOLDER: "/home/hovoh/backups"
+    volumes:
+      - "./db_backups:/home/hovoh/backups"
+      - "./restore.sh:/home/hovoh/restore.sh"
+      - "./dump.sh:/home/hovoh/dump.sh"
+volumes:
+  grafana-data:
+  monitored-data:

@@ -1,0 +1,16 @@
+version: "3.9"
+services:
+  monitoring:
+    image: ghcr.io/hovoh/web3-bot:${BOT_IMAGE_TAG}
+    restart: ${RESTART_POLICY}
+    environment:
+      DB_HOST: "db"
+      DB_PORT: "5432"
+      DB_USER: ${DB_USER}
+      DB_PASSWORD: ${DB_PASSWORD}
+      DB_NAME: ${DB_NAME}
+      BACKUP_FOLDER: "/home/hovoh/backups"
+    volumes:
+      - "./db_backups:/home/hovoh/backups"
+    depends_on:
+      - db

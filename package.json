@@ -8,9 +8,10 @@
   "scripts": {
     "w:hardon": "yarn workspace @lenclub/hardon",
     "w:contracts": "yarn workspace @lenclub/lending-contracts",
-    "w:api": "yarn workspace @lenclub/api",
+    "w:api": "yarn workspace @mclb/lending-api",
     "build": "yarn w:hardon build",
-    "backend:start": "yarn w:contracts clean && yarn w:contracts hh:node",
+    "chain:start": "yarn w:contracts clean && yarn w:contracts hh:node",
+    "chain:fantom": "yarn w:contracts clean && yarn w:contracts hh:node:ftm",
     "api:build": "yarn w:contracts deploy:export && yarn w:api build",
     "syncpack:fix": "yarn syncpack fix-mismatches && yarn install",
     "syncpack:list": "yarn syncpack list-mismatches"
@@ -21,7 +22,8 @@
     ],
     "nohoist": [
       "**/@types/mocha",
-      "**/@types/jest"
+      "**/@types/jest",
+      "**/@types/d3*"
     ]
   },
   "dependencies": {
