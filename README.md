@@ -1,7 +1,7 @@
 
 # Lending Crypto Repo
 
-Monorepo for all the code regarding the MCLB lending platform.
+Monorepo for all the code regarding the Crypto lending platform.
 
 ## Set up
 VSCode with the Hardhat extension enabled is recommended
